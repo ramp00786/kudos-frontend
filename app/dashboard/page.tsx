@@ -248,21 +248,59 @@ export default function DashboardPage() {
                 {receivedStars ? (
                   <>
                     <div className="text-center mb-3">
+                      {(() => {
+                        // Calculate average rating out of 5
+                        const avgRating = receivedStars.max_possible_stars > 0
+                          ? (receivedStars.total_stars_received / receivedStars.max_possible_stars) * 5
+                          : 0;
+                        
+                        return (
+                          <p className="text-sm font-medium text-gray-700 mb-1">
+                            Rating: {avgRating.toFixed(1)} 
+                          </p>
+                        );
+                      })()}
                       <div className="flex items-center justify-center space-x-1 mb-2">
-                        {[1, 2, 3, 4, 5].map((star) => {
-                          const fullStars = Math.floor(
-                            (receivedStars.total_stars_received / receivedStars.max_possible_stars) * 5
-                          );
-                          return (
-                            <Star
-                              key={star}
-                              className={`w-6 h-6 ${
-                                star <= fullStars
-                                  ? 'text-yellow-500 fill-yellow-500'
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          );
+                        {[1, 2, 3, 4, 5].map((starIndex) => {
+                          // Calculate average rating out of 5
+                          const avgRating = receivedStars.max_possible_stars > 0
+                            ? (receivedStars.total_stars_received / receivedStars.max_possible_stars) * 5
+                            : 0;
+                          
+                          const fullStars = Math.floor(avgRating);
+                          const partialStar = avgRating - fullStars;
+                          
+                          // Determine if this star should be full, partial, or empty
+                          if (starIndex <= fullStars) {
+                            // Full star
+                            return (
+                              <Star
+                                key={starIndex}
+                                className="w-6 h-6 text-yellow-500 fill-yellow-500"
+                              />
+                            );
+                          } else if (starIndex === fullStars + 1 && partialStar > 0) {
+                            // Partial star
+                            return (
+                              <div key={starIndex} className="relative w-6 h-6">
+                                <Star className="absolute w-6 h-6 text-gray-300" />
+                                <div
+                                  className="absolute overflow-hidden"
+                                  style={{ width: `${partialStar * 100}%` }}
+                                >
+                                  <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                                </div>
+                              </div>
+                            );
+                          } else {
+                            // Empty star
+                            return (
+                              <Star
+                                key={starIndex}
+                                className="w-6 h-6 text-gray-300"
+                              />
+                            );
+                          }
                         })}
                       </div>
                       <p className="text-3xl font-bold text-gray-900">
