@@ -15,8 +15,6 @@ A modern Next.js 14 frontend application for peer-to-peer kudos recognition with
 
 The Kudos Recognition System frontend is a responsive web application that allows team members to give and receive recognition (kudos) from their colleagues. It features real-time notifications, a modern UI with Tailwind CSS, and seamless integration with the Django backend.
 
-**🌐 Live Production API:** https://ramp00786.pythonanywhere.com/api/
-
 **📖 Deployment Guide:** See [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md) for step-by-step deployment instructions.
 
 ## Technology Stack
@@ -150,7 +148,7 @@ The Kudos Recognition System frontend is a responsive web application that allow
 
 - Node.js 18 or higher
 - npm or yarn package manager
-- Backend API running at https://ramp00786.pythonanywhere.com/api/
+- Backend API running at http://localhost:8000/api
 
 ### Step 1: Clone the Repository
 
@@ -186,7 +184,7 @@ Create `.env.local` file (copy from `.env.example`):
 
 ```env
 # Backend API URL
-NEXT_PUBLIC_API_URL=https://ramp00786.pythonanywhere.com/api
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
 
 # Pusher Configuration for Real-time Updates
 NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
@@ -528,6 +526,8 @@ npm run build
    NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
    NEXT_PUBLIC_PUSHER_CLUSTER=ap2
    ```
+   
+   **Note:** For production, use the live API URL. For local development, use `http://localhost:8000/api`
 
 4. **Deploy!** 🎉
 
