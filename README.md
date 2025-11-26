@@ -15,6 +15,10 @@ A modern Next.js 14 frontend application for peer-to-peer kudos recognition with
 
 The Kudos Recognition System frontend is a responsive web application that allows team members to give and receive recognition (kudos) from their colleagues. It features real-time notifications, a modern UI with Tailwind CSS, and seamless integration with the Django backend.
 
+**🌐 Live Production API:** https://ramp00786.pythonanywhere.com/api/
+
+**📖 Deployment Guide:** See [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md) for step-by-step deployment instructions.
+
 ## Technology Stack
 
 ### Core Technologies
@@ -146,7 +150,7 @@ The Kudos Recognition System frontend is a responsive web application that allow
 
 - Node.js 18 or higher
 - npm or yarn package manager
-- Backend API running on http://localhost:8000
+- Backend API running at https://ramp00786.pythonanywhere.com/api/
 
 ### Step 1: Clone the Repository
 
@@ -178,11 +182,11 @@ npm install
 
 ### Step 3: Configure Environment
 
-Create or verify `.env.local` file:
+Create `.env.local` file (copy from `.env.example`):
 
 ```env
 # Backend API URL
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_URL=https://ramp00786.pythonanywhere.com/api
 
 # Pusher Configuration for Real-time Updates
 NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
@@ -505,38 +509,33 @@ npm run build
 
 ## Production Deployment
 
-### Vercel (Recommended)
+### Deploy to Vercel
 
-```bash
-# Install Vercel CLI
-npm i -g vercel
+**📖 See [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md) for complete step-by-step guide!**
 
-# Deploy
-vercel
+**Quick Steps:**
 
-# Set environment variables in Vercel dashboard
-NEXT_PUBLIC_API_URL=https://your-api.com/api
-NEXT_PUBLIC_PUSHER_KEY=your_key
-NEXT_PUBLIC_PUSHER_CLUSTER=your_cluster
-```
+1. **Push to GitHub** (already done ✅)
+   
+2. **Import to Vercel:**
+   - Go to https://vercel.com
+   - Sign up with GitHub
+   - Import `kudos-frontend` repository
 
-### Other Platforms
+3. **Add Environment Variables:**
+   ```
+   NEXT_PUBLIC_API_URL=https://ramp00786.pythonanywhere.com/api
+   NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
+   NEXT_PUBLIC_PUSHER_CLUSTER=ap2
+   ```
 
-1. **Build the application:**
-```bash
-npm run build
-```
+4. **Deploy!** 🎉
 
-2. **Environment variables:**
-- Set all `NEXT_PUBLIC_*` variables
-- Point `NEXT_PUBLIC_API_URL` to production API
+5. **Update Backend CORS:**
+   - Add your Vercel URL to backend CORS settings
+   - Reload PythonAnywhere app
 
-3. **Start production server:**
-```bash
-npm run start
-```
-
-4. **Configure domain and SSL**
+**Auto-Deploy:** Every push to `main` branch automatically deploys to production!
 
 ## Performance Optimization
 
