@@ -568,17 +568,10 @@ npm run build
 - ✅ Screen reader support
 - ✅ Color contrast compliance
 
-## License
-
-This project is part of a coding challenge assignment.
-
 ## Support
 
 For issues or questions:
-- Check Next.js documentation: https://nextjs.org/docs
-- Check React documentation: https://react.dev/
-- Review Tailwind CSS documentation: https://tailwindcss.com/docs
-- Check shadcn/ui documentation: https://ui.shadcn.com/
+- Mail: ramp00786@gmail.com
 
 ---
 
