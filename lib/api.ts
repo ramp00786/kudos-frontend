@@ -70,6 +70,11 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
+      // Skip token refresh logic for login endpoint (login failures should not trigger refresh)
+      if (originalRequest.url?.includes('/auth/login/')) {
+        return Promise.reject(error);
+      }
+      
       try {
         const refreshToken = localStorage.getItem('refresh_token');
         
