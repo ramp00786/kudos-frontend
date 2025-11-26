@@ -35,7 +35,7 @@ Click "Environment Variables" section and add:
 
 ```
 NEXT_PUBLIC_API_URL=https://ramp00786.pythonanywhere.com/api
-NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
+NEXT_PUBLIC_PUSHER_KEY=b1bb59e57e8c1fc6ccf0
 NEXT_PUBLIC_PUSHER_CLUSTER=ap2
 ```
 
