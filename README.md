@@ -129,6 +129,8 @@ The Kudos Recognition System frontend is a responsive web application that allow
 
 - 🎨 **Modern UI**: Beautiful, responsive design with Tailwind CSS
 - 🔐 **Secure Authentication**: JWT token-based authentication
+- 🌟 **5-Star Rating**: Interactive star rating selector when giving kudos
+- 🏆 **Stars Display**: Shows average rating with partial star fill visualization
 - 🔔 **Real-time Notifications**: Instant kudos updates with Pusher
 - ⚡ **Fast Performance**: Optimized with Next.js 14
 - 📱 **Responsive**: Works on desktop, tablet, and mobile
@@ -217,12 +219,21 @@ npm run start
 - View remaining kudos for the week (0-3)
 - See total team members in your organization
 
+#### Stars Received (Sidebar)
+- View weekly stars received with average rating
+- Visual 5-star display with partial star fill
+- Progress bar showing total stars out of max possible
+- Displays: "Rating: X.X" with one decimal precision
+- Shows kudos received count for the week
+- Real-time updates when receiving new kudos
+
 #### Give Kudos
 1. Click "Give Kudos" button
 2. Select a teammate from the list
 3. Write a meaningful message (required)
-4. Click "Send Kudos"
-5. Your remaining kudos count updates automatically
+4. Select star rating (1-5 stars, required)
+5. Click "Send Kudos"
+6. Your remaining kudos count updates automatically
 
 #### Kudos You've Received
 - View all kudos you've received
