@@ -185,7 +185,7 @@ Create or verify `.env.local` file:
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
 
 # Pusher Configuration for Real-time Updates
-NEXT_PUBLIC_PUSHER_KEY=*****************
+NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
 NEXT_PUBLIC_PUSHER_CLUSTER=ap2
 ```
 
