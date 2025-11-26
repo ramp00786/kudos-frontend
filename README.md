@@ -178,9 +178,9 @@ npm install
 - clsx 2.1.1
 - tailwind-merge 2.6.0
 
-### Step 3: Configure Environment
+### Step 3: Configure Environment Variables
 
-Create `.env.local` file (copy from `.env.example`):
+Create `.env.local` file in the root directory:
 
 ```env
 # Backend API URL
@@ -190,6 +190,8 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api
 NEXT_PUBLIC_PUSHER_KEY=b1bb59e57e8c1fc6ccf0
 NEXT_PUBLIC_PUSHER_CLUSTER=ap2
 ```
+
+**Note:** All environment variables must be prefixed with `NEXT_PUBLIC_` to be accessible in the browser.
 
 ### Step 4: Run Development Server
 
@@ -295,19 +297,6 @@ frontend/
 ```
 
 ## Configuration
-
-### Environment Variables
-
-All environment variables must be prefixed with `NEXT_PUBLIC_` to be accessible in the browser:
-
-```env
-# Backend API
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
-
-# Pusher Real-time
-NEXT_PUBLIC_PUSHER_KEY=your_pusher_key
-NEXT_PUBLIC_PUSHER_CLUSTER=your_cluster
-```
 
 ### Tailwind Configuration
 
@@ -470,11 +459,13 @@ npm run dev
 ### Port Already in Use
 
 ```bash
-# Kill process on port 3000
-lsof -ti:3000 | xargs kill -9
-
-# Or use a different port
+# Use a different port
 npm run dev -- -p 3001
+
+# Or kill the process:
+# On Linux/Mac: lsof -ti:3000 | xargs kill -9
+# On Windows: netstat -ano | findstr :3000
+#             taskkill /PID <PID> /F
 ```
 
 ### Module Not Found
@@ -523,11 +514,11 @@ npm run build
 3. **Add Environment Variables:**
    ```
    NEXT_PUBLIC_API_URL=https://ramp00786.pythonanywhere.com/api
-   NEXT_PUBLIC_PUSHER_KEY=164bc069aaa63440b713
+   NEXT_PUBLIC_PUSHER_KEY=b1bb59e57e8c1fc6ccf0
    NEXT_PUBLIC_PUSHER_CLUSTER=ap2
    ```
    
-   **Note:** For production, use the live API URL. For local development, use `http://localhost:8000/api`
+   **Note:** For production deployment, use the production API URL. For local development, use `http://localhost:8000/api`
 
 4. **Deploy!** 🎉
 
