@@ -24,10 +24,12 @@ export default function RootLayout({
           <Toaster
             position="top-right"
             toastOptions={{
-              duration: 4000,
+              duration: 5000,
               style: {
                 background: '#363636',
                 color: '#fff',
+                fontSize: '14px',
+                padding: '16px',
               },
               success: {
                 duration: 3000,
@@ -37,7 +39,7 @@ export default function RootLayout({
                 },
               },
               error: {
-                duration: 4000,
+                duration: 6000,
                 iconTheme: {
                   primary: '#ef4444',
                   secondary: '#fff',

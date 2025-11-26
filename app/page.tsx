@@ -9,6 +9,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,23 +21,29 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
     
     if (!username || !password) {
+      setError('Please enter both username and password');
+      toast.error('Please enter both username and password', { duration: 4000 });
       return;
     }
 
     setLoading(true);
     
-    try {
-      await login({ username, password });
-    } catch (error) {
-      // Error handling done in AuthContext with toast
-    } finally {
-      setLoading(false);
+    // Login returns true on success, false on failure
+    const success = await login({ username, password });
+    
+    if (!success) {
+      // Login failed - error toast already shown by AuthContext
+      setError('Login failed. Please check your credentials.');
     }
+    
+    setLoading(false);
   };
 
   return (
@@ -61,6 +68,11 @@ export default function LoginPage() {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input

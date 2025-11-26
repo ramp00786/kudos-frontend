@@ -22,7 +22,7 @@ import toast from 'react-hot-toast';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -82,8 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Login function
    * 
    * @param credentials - Username and password
+   * @returns true if login successful, false otherwise
    */
-  const login = async (credentials: LoginCredentials) => {
+  const login = async (credentials: LoginCredentials): Promise<boolean> => {
     try {
       // Get JWT tokens from backend
       const tokens = await apiLogin(credentials);
@@ -97,15 +98,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(userData);
       
       // Show success message
-      toast.success(`Welcome back, ${userData.first_name || userData.username}!`);
+      toast.success(`Welcome back, ${userData.first_name || userData.username}!`, {
+        duration: 3000,
+      });
       
       // Redirect to dashboard
       router.push('/dashboard');
+      return true;
     } catch (error: any) {
       // Handle login errors
-      const errorMessage = error.response?.data?.detail || 'Invalid username or password';
-      toast.error(errorMessage);
-      throw error;
+      let errorMessage = 'Invalid username or password';
+      
+      if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.response?.data?.non_field_errors) {
+        errorMessage = error.response.data.non_field_errors[0];
+      } else if (error.message && !error.response) {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      
+      // Show error toast with longer duration
+      toast.error(errorMessage, {
+        duration: 6000,
+      });
+      
+      // Return false to indicate login failed (don't throw to prevent refresh)
+      return false;
     }
   };
 
