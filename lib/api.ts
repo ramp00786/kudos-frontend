@@ -19,6 +19,7 @@ import type {
   LoginCredentials,
   GiveKudosRequest,
   RemainingKudosResponse,
+  ReceivedStarsResponse,
   PaginatedResponse,
 } from '@/types';
 
@@ -184,6 +185,18 @@ export async function giveKudos(data: GiveKudosRequest): Promise<Kudo> {
  */
 export async function getRemainingKudos(): Promise<RemainingKudosResponse> {
   const response = await api.get<RemainingKudosResponse>('/kudos/remaining/');
+  return response.data;
+}
+
+// ============================================================================
+// Stars API calls
+// ============================================================================
+
+/**
+ * Get the total stars received by the current user this week.
+ */
+export async function getReceivedStars(): Promise<ReceivedStarsResponse> {
+  const response = await api.get<ReceivedStarsResponse>('/stars/received/');
   return response.data;
 }
 

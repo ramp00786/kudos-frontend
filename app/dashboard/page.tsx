@@ -14,11 +14,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePusherKudos } from '@/hooks/usePusher';
-import { getReceivedKudos, getSentKudos, getRemainingKudos, getOrganizationUsers } from '@/lib/api';
-import type { Kudo, User } from '@/types';
+import { getReceivedKudos, getSentKudos, getRemainingKudos, getOrganizationUsers, getReceivedStars } from '@/lib/api';
+import type { Kudo, User, ReceivedStarsResponse } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, LogOut, Users, Award } from 'lucide-react';
+import { Heart, LogOut, Users, Award, Star } from 'lucide-react';
 import GiveKudosModal from '@/components/GiveKudosModal';
 import KudosCard from '@/components/KudosCard';
 import toast from 'react-hot-toast';
@@ -29,6 +29,7 @@ export default function DashboardPage() {
   const [kudos, setKudos] = useState<Kudo[]>([]);
   const [sentKudos, setSentKudos] = useState<Kudo[]>([]);
   const [remainingKudos, setRemainingKudos] = useState<number | null>(null);
+  const [receivedStars, setReceivedStars] = useState<ReceivedStarsResponse | null>(null);
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -46,11 +47,12 @@ export default function DashboardPage() {
 
     const loadData = async () => {
       try {
-        const [kudosData, sentKudosData, remainingData, usersData] = await Promise.all([
+        const [kudosData, sentKudosData, remainingData, usersData, starsData] = await Promise.all([
           getReceivedKudos(),
           getSentKudos(),
           getRemainingKudos(),
           getOrganizationUsers(),
+          getReceivedStars(),
         ]);
 
         // Check which kudos are within 2 minutes and update is_new flag
@@ -66,6 +68,7 @@ export default function DashboardPage() {
         setKudos(processedKudos);
         setSentKudos(sentKudosData.results);
         setRemainingKudos(remainingData.remaining_kudos);
+        setReceivedStars(starsData);
         setOrgUsers(usersData);
       } catch (error) {
         console.error('Failed to load dashboard data:', error);
@@ -97,10 +100,18 @@ export default function DashboardPage() {
   }, []);
 
   // Handle new kudos from Pusher
-  const handleNewKudo = useCallback((newKudo: Kudo) => {
+  const handleNewKudo = useCallback(async (newKudo: Kudo) => {
     // Mark as new when received via Pusher
     setKudos((prevKudos) => [{ ...newKudo, is_new: true }, ...prevKudos]);
     toast.success(`New kudos from ${newKudo.from_user.first_name || newKudo.from_user.username}!`);
+    
+    // Refresh stars data
+    try {
+      const starsData = await getReceivedStars();
+      setReceivedStars(starsData);
+    } catch (error) {
+      console.error('Failed to refresh stars:', error);
+    }
   }, []);
 
   // Subscribe to Pusher for real-time updates
@@ -109,10 +120,11 @@ export default function DashboardPage() {
   // Refresh data after giving kudos
   const handleKudosGiven = async () => {
     try {
-      const [kudosData, sentKudosData, remainingData] = await Promise.all([
+      const [kudosData, sentKudosData, remainingData, starsData] = await Promise.all([
         getReceivedKudos(),
         getSentKudos(),
         getRemainingKudos(),
+        getReceivedStars(),
       ]);
 
       // Check which kudos are within 2 minutes and update is_new flag
@@ -128,6 +140,7 @@ export default function DashboardPage() {
       setKudos(processedKudos);
       setSentKudos(sentKudosData.results);
       setRemainingKudos(remainingData.remaining_kudos);
+      setReceivedStars(starsData);
     } catch (error) {
       console.error('Failed to refresh data:', error);
     }
@@ -221,6 +234,72 @@ export default function DashboardPage() {
                 You've used all your kudos this week. New kudos arrive Monday!
               </p>
             )}
+
+            {/* Received Stars Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-base">
+                  <Star className="w-4 h-4 mr-2 text-yellow-500" />
+                  Stars Received
+                </CardTitle>
+                <CardDescription>This week's rating</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {receivedStars ? (
+                  <>
+                    <div className="text-center mb-3">
+                      <div className="flex items-center justify-center space-x-1 mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          const fullStars = Math.floor(
+                            (receivedStars.total_stars_received / receivedStars.max_possible_stars) * 5
+                          );
+                          return (
+                            <Star
+                              key={star}
+                              className={`w-6 h-6 ${
+                                star <= fullStars
+                                  ? 'text-yellow-500 fill-yellow-500'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          );
+                        })}
+                      </div>
+                      <p className="text-3xl font-bold text-gray-900">
+                        {receivedStars.total_stars_received}
+                        <span className="text-lg text-gray-500">
+                          /{receivedStars.max_possible_stars}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                          style={{
+                            width: `${
+                              receivedStars.max_possible_stars > 0
+                                ? (receivedStars.total_stars_received /
+                                    receivedStars.max_possible_stars) *
+                                  100
+                                : 0
+                            }%`,
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs text-center text-gray-600">
+                        {receivedStars.kudos_received_count} {receivedStars.kudos_received_count === 1 ? 'kudo' : 'kudos'} received
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-2">
+                    <p className="text-2xl font-bold text-gray-900">0/0</p>
+                    <p className="text-xs text-gray-600">No kudos received yet</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Organization Users */}
             <Card>

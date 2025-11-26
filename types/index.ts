@@ -46,6 +46,7 @@ export interface Kudo {
   message: string;
   created_at: string;
   is_new: boolean;
+  stars: number;
 }
 
 /**
@@ -80,6 +81,7 @@ export interface LoginCredentials {
 export interface GiveKudosRequest {
   to_user_id: number;
   message: string;
+  stars: number;
 }
 
 /**
@@ -87,6 +89,16 @@ export interface GiveKudosRequest {
  */
 export interface RemainingKudosResponse {
   remaining_kudos: number;
+  week_identifier: string;
+}
+
+/**
+ * Received stars response.
+ */
+export interface ReceivedStarsResponse {
+  total_stars_received: number;
+  kudos_received_count: number;
+  max_possible_stars: number;
   week_identifier: string;
 }
 

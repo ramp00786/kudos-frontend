@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { getUserInitials } from '@/lib/utils';
-import { Heart, Loader2 } from 'lucide-react';
+import { Heart, Loader2, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface GiveKudosModalProps {
@@ -41,6 +41,7 @@ export default function GiveKudosModal({
 }: GiveKudosModalProps) {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [message, setMessage] = useState('');
+  const [stars, setStars] = useState<number>(5);
   const [loading, setLoading] = useState(false);
 
   const selectedUser = users.find((u) => u.id === selectedUserId);
@@ -60,6 +61,7 @@ export default function GiveKudosModal({
       await giveKudos({
         to_user_id: selectedUserId,
         message: message.trim(),
+        stars: stars,
       });
 
       toast.success(`Kudos sent to ${selectedUser?.username}!`);
@@ -67,6 +69,7 @@ export default function GiveKudosModal({
       // Reset form
       setSelectedUserId(null);
       setMessage('');
+      setStars(5);
       
       // Close modal and refresh data
       onOpenChange(false);
@@ -167,6 +170,36 @@ export default function GiveKudosModal({
                   {remainingChars} characters left
                 </p>
               </div>
+            </div>
+
+            {/* Star Rating */}
+            <div className="space-y-2">
+              <Label>Star rating (required)</Label>
+              <div className="flex items-center space-x-2">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    type="button"
+                    onClick={() => setStars(rating)}
+                    disabled={loading}
+                    className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-transform hover:scale-110"
+                  >
+                    <Star
+                      className={`w-8 h-8 ${
+                        rating <= stars
+                          ? 'text-yellow-500 fill-yellow-500'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  </button>
+                ))}
+                <span className="ml-2 text-sm text-gray-600">
+                  {stars} {stars === 1 ? 'star' : 'stars'}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500">
+                Click on a star to rate (1-5 stars)
+              </p>
             </div>
           </div>
 
